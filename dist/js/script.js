@@ -44,7 +44,7 @@ monogatari.assets ('gallery', {
 
 // Define the music used in the game.
 monogatari.assets ('music', {
-
+	'MainMusic': 'MainMusic.wav'
 });
 
 // Define the voice files used in the game.
@@ -77,70 +77,76 @@ monogatari.assets ('scenes', {
 monogatari.characters ({
 	'y': {
 		name: 'Yui',
-		color: '#5bcaff'
+		color: '#5bcaff',
+		sprites: {
+			elder: 'Elder_01.png',
+		}
 	}
 });
 
-monogatari.script ({
-	// The game starts here.
-	'Start': [
-		'show scene #f7f6f6 with fadeIn',
-		'show notification Welcome',
-		{
-			'Input': {
-				'Text': 'What is your name?',
-				'Validation': function (input) {
-					return input.trim ().length > 0;
-				},
-				'Save': function (input) {
-					this.storage ({
-						player: {
-							name: input
-						}
-					});
-					return true;
-				},
-				'Revert': function () {
-					this.storage ({
-						player: {
-							name: ''
-						}
-					});
-				},
-				'Warning': 'You must enter a name!'
-			}
-		},
-		'y Hi {{player.name}} Welcome to Monogatari!',
-		{
-			'Choice': {
-				'Dialog': 'y Have you already read some documentation?',
-				'Yes': {
-					'Text': 'Yes',
-					'Do': 'jump Yes'
-				},
-				'No': {
-					'Text': 'No',
-					'Do': 'jump No'
-				}
-			}
-		}
-	],
+// monogatari.script ({
+// 	// The game starts here.
+// 	'Start': [
+// 		'show scene #f7f6f6 with fadeIn',
+// 		'show notification Welcome',
+// 		'show background url("assets/scenes/Title_16x9_01.png")',
+// 		'play music MainMusic with loop',
+// 		{
+// 			'Input': {
+// 				'Text': 'What is your name?',
+// 				'Validation': function (input) {
+// 					return input.trim ().length > 0;
+// 				},
+// 				'Save': function (input) {
+// 					this.storage ({
+// 						player: {
+// 							name: input
+// 						}
+// 					});
+// 					return true;
+// 				},
+// 				'Revert': function () {
+// 					this.storage ({
+// 						player: {
+// 							name: ''
+// 						}
+// 					});
+// 				},
+// 				'Warning': 'You must enter a name!'
+// 			}
+// 		},
+// 		'show character y elder',
+// 		'y Hi {{player.name}} Welcome to Monogatari!',
+// 		{
+// 			'Choice': {
+// 				'Dialog': 'y Have you already read some documentation?',
+// 				'Yes': {
+// 					'Text': 'Yes',
+// 					'Do': 'jump Yes'
+// 				},
+// 				'No': {
+// 					'Text': 'No',
+// 					'Do': 'jump No'
+// 				}
+// 			}
+// 		}
+// 	],
 
-	'Yes': [
-		'y Thats awesome!',
-		'y Then you are ready to go ahead and create an amazing Game!',
-		'y I can’t wait to see what story you’ll tell!',
-		'end'
-	],
+// 	'Yes': [
+// 		'y Thats awesome!',
+// 		'y Then you are ready to go ahead and create an amazing Game!',
+// 		'y I can’t wait to see what story you’ll tell!',
+// 		'end'
+// 	],
 
-	'No': [
+// 	'No': [
 
-		'y You can do it now.',
+// 		'y You can do it now.',
 
-		'show message Help',
+// 		'show message Help',
 
-		'y Go ahead and create an amazing Game!',
-		'y I can’t wait to see what story you’ll tell!',
-		'end'
-	]
-});
+// 		'y Go ahead and create an amazing Game!',
+// 		'y I can’t wait to see what story you’ll tell!',
+// 		'end'
+// 	]
+// });

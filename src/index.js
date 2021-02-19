@@ -34,9 +34,18 @@ export * from '@aegis-framework/artemis';
 export * from './lib/vendor/typed.min.js';
 export * from 'random-js';
 export * from 'tsparticles';
-
+import { Holistic } from "@mediapipe/holistic/holistic";
+import { Camera } from "@mediapipe/camera_utils/camera_utils";
+// import { } from "@mediapipe/control_utils/control_utils";
+import { drawLandmarks, drawConnectors } from "@mediapipe/drawing_utils/drawing_utils";
 import Monogatari from './monogatari';
 
+Monogatari.mediapipe = {
+	'Holistic': Holistic,
+	'Camera': Camera,
+	'drawConnectors': drawConnectors,
+	'drawLandmarks': drawLandmarks
+}
 /**
  * =============================================================================
  * Translations
@@ -58,7 +67,6 @@ import portuguese from './translations/Português';
 import russian from './translations/Russian';
 import spanish from './translations/Español';
 import tokipona from './translations/tokipona';
-
 
 Monogatari._translations = {
 	'Беларуская': belarusian,
@@ -276,5 +284,6 @@ export * from './lib/ShadowComponent';
 export * from './lib/ScreenComponent';
 export * from './lib/MenuComponent';
 export * from './lib/FancyError';
+
 
 export default Monogatari;

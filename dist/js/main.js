@@ -1,7 +1,6 @@
 'use strict';
 /* global Monogatari */
 /* global monogatari */
-
 /**
  * =============================================================================
  * This is the file where you should put all your custom JavaScript code,
@@ -30,9 +29,21 @@ const { $_ready, $_ } = Monogatari;
 
 $_ready (() => {
 	// 2. Inside the $_ready function:
+	const holistic = new monogatari.mediapipe.Holistic({
+		locateFile: (file) => {
+			return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.1.1613603339/${file}`;
+		}
+	});
+	holistic.setOptions({
+		upperBodyOnly: false,
+		smoothLandmarks: true,
+		minDetectionConfidence: 0.5,
+		minTrackingConfidence: 0.5
+	});
+	monogatari.holistic = holistic;
+	monogatari.holistic.send();
 
 	monogatari.init ('#monogatari').then (() => {
 		// 3. Inside the init function:
-
 	});
 });

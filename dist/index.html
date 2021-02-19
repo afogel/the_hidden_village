@@ -7,8 +7,11 @@
 		<title>Monogatari Visual Novel</title> <!--Up to 60-70 Characters. Optimal Format: Primary Keyword - Secondary Keyword | Brand Name-->
 
 		<meta charset="UTF-8">
+		<!-- <meta http-equiv="Content-Security-Policy"
+			content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://www.google.com"> -->
+
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
-		<meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; script-src 'self' 'unsafe-eval'">
+		<!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;"> -->
 		<meta name="description" content=""> <!--Page description. No longer than 155 characters.-->
 		<meta name="keywords" content="">
 		<meta name="author" content=""> <!--Name of the author.-->
@@ -84,6 +87,9 @@
 		<script src="./js/options.js"></script>
 		<script src="./js/storage.js"></script>
 		<script src="./js/script.js"></script>
+		<script src="./js/scene1.js"></script>
+		<script src="./js/constants.js"></script>
+		<script src="./js/pose_detector.js"></script>
 		<script src="./js/main.js"></script>
 
 	</head>
@@ -117,6 +123,7 @@
 				<settings-screen></settings-screen>
 				<help-screen></help-screen>
 			</visual-novel>
+			<video class="input_video"></video>
 		</div>
 	</body>
 
