@@ -8,7 +8,20 @@ function removeLandmarks(results) {
   if (results.poseLandmarks) {
     removeElements(
       results.poseLandmarks,
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 18, 19, 20, 21, 22]);
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 18, 19, 20, 21, 22]);
+  }
+}
+
+function bodyTooClose(results) {
+  if (results.poseLandmarks) {
+    const majorBodyLandmarks = [
+      11, 12, // Shoulders
+      23, 24, // Hips
+      25, 26, // Knees
+      7, 8    // Middle of head
+    ].map((key) => results.poseLandmarks[key].visibility > 0.15)
+    const hasInvisibleBodyParts = majorBodyLandmarks.filter((visible) => visible === false).length > 1;
+    return hasInvisibleBodyParts;
   }
 }
 
@@ -23,9 +36,19 @@ monogatari.action('Canvas').objects({
         let drawConnectors = monogatari.mediapipe.drawConnectors;
         let drawLandmarks = monogatari.mediapipe.drawLandmarks;
         return (results) => {
-          removeLandmarks(results);
           context.save();
           context.clearRect(0, 0, width, height);
+          if (bodyTooClose(results)) {
+            context.font = "3em Calibri";
+            context.fillStyle = "White";
+            context.textAlign = "center";
+            context.fillText("You're too close!", width / 2, height * .25);
+            context.fillText("Please move back!", width / 2, height * .75);
+            context.strokeStyle = 'red';
+            context.lineWidth = 15;
+            context.strokeRect(0,0, width, height);
+          }
+          removeLandmarks(results);
           context.drawImage(
             results.image, 0, 0, this.width, this.height);
           drawConnectors(context, results.poseLandmarks, POSE_CONNECTIONS,
