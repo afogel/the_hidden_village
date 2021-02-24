@@ -37,14 +37,14 @@ export * from 'tsparticles';
 import { Holistic } from "@mediapipe/holistic/holistic";
 import { Camera } from "@mediapipe/camera_utils/camera_utils";
 // import { } from "@mediapipe/control_utils/control_utils";
-import { drawLandmarks, drawConnectors } from "@mediapipe/drawing_utils/drawing_utils";
+// import { drawLandmarks, drawConnectors } from "@mediapipe/drawing_utils/drawing_utils";
 import Monogatari from './monogatari';
 
 Monogatari.mediapipe = {
 	'Holistic': Holistic,
 	'Camera': Camera,
-	'drawConnectors': drawConnectors,
-	'drawLandmarks': drawLandmarks
+	// 'drawConnectors': drawConnectors,
+	// 'drawLandmarks': drawLandmarks
 }
 /**
  * =============================================================================
