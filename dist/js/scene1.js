@@ -15,13 +15,13 @@ monogatari.script ({
 		'show scene #f7f6f6 with fadeIn',
 		'show background url("assets/scenes/MountainPass_a_02.png")',
 		'play music MainMusic with loop',
+		'show canvas wireframe',
 		`Stars zoom past your ship as you make your way through space. Navigating
 	the stars is difficult, but you are an experienced pilot.Suddenly, alarm
 	bells begin to clang throughout the cabin.Something begins pulling your ship
 	off course! You jump to your feet to rush to the controls, but you are thrown
 	to the floor and your vision goes black.`,
 		'show character elder elder',
-		'elder Hi {{player.name}} Welcome to Monogatari!',
 		'hide character elder',
 		'show scene #f7f6f6 with fadeIn',
 		'show background url("assets/scenes/SnowyForest_a_02.png")',
@@ -39,10 +39,17 @@ monogatari.script ({
   follow the shimmering light until you reach clearing, and notice a strange being
   is standing in the open.  She speaks to you in an unfamiliar language, but fortunately,
   the translation device in your helmet translates her words.`,
-	'elder You crashed here?',
-  "You nod.",
-	"elder Let us help you.",
-		'show canvas wireframe',
+		'elder You crashed here?',
+		"You nod.",
+		"elder Let us help you.",
+		'show background url("assets/scenes/VillageEdge_a_02.png")',
+		"elder Follow me.",
+		"She leads you back through the forest to a small village with strange, dome- shaped buildings.",
+		`elder The people of this village can harness strings of energy that can recharge your ship’s
+		fuel cell. Meet with them and they can help you get home.`,
+		"You nod, and head further into the hidden village.",
+		'hide character elder',
+		'show character twins',
 	],
 
 	'Yes': [

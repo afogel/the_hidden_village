@@ -2,6 +2,7 @@
 // const drawLandmarks = monogatari.mediapipe.drawLandmarks;
 const RED = "#FF0000";
 const GREEN = "#00FF00";
+let recentAngles = [];
 // drawLandmarks(context, results.poseLandmarks,
 //   { color: '#FF0000', lineWidth: 2 });
 // iterator
@@ -56,6 +57,21 @@ const GREEN = "#00FF00";
 //   }
 // }
 
+function perc2color(percentage) {
+  var r, g, b = 0;
+  if (percentage < 50) {
+    r = 255;
+    g = Math.round(5.1 * percentage);
+  }
+  else {
+    g = 255;
+    r = Math.round(510 - 5.10 * percentage);
+  }
+  var h = r * 0x10000 + g * 0x100 + b * 0x1;
+  return '#' + ('000000' + h.toString(16)).slice(-6);
+}
+
+
 function getRightArm(results) {
   return [results.poseLandmarks[11], results.poseLandmarks[13], results.poseLandmarks[15]];
   return [results.poseLandmarks[11], results.poseLandmarks[13], results.rightHandLandmarks[0]];
@@ -84,13 +100,11 @@ function getAngle(firstPoint, midPoint, lastPoint) {
   // let result =
   radians =  Math.atan2(lastPoint.y - midPoint.y, lastPoint.x - midPoint.x) -
     Math.atan2(firstPoint.y - midPoint.y, firstPoint.x - midPoint.x);
+  return radians;
   degrees = radians * (180 / Math.PI);
     // );
 
   degrees = Math.abs(degrees); // Angle should never be negative
-  if (degrees > 180) {
-    degrees = (360.0 - degrees); // Always get the acute representation of the angle
-  }
   return degrees;
 }
 
@@ -113,7 +127,7 @@ function bodyTooClose(results) {
     const majorBodyLandmarks = [
       11, 12, // Shoulders
       23, 24, // Hips
-      25, 26, // Knees
+      // 25, 26, // Knees
       7, 8    // Middle of head
     ].map((key) => results.poseLandmarks[key].visibility > 0.15)
     const hasInvisibleBodyParts = majorBodyLandmarks.filter((visible) => visible === false).length > 1;
@@ -154,11 +168,22 @@ monogatari.action('Canvas').objects({
             { color: RED, lineWidth: 4 });
           let arm = getRightArm(results);
           let angle = getAngle(arm[0], arm[1], arm[2]);
-          if (angle >= 60 && angle <= 120) {
-            drawConnectors(context, results.poseLandmarks, [[11, 13], [13, 15]], { color: GREEN, lineWidth: 4 });
-          } else {
-            drawConnectors(context, results.poseLandmarks, [[11, 13], [13, 15]], { color: RED, lineWidth: 4 });
+          recentAngles.push(
+            ((Math.sin(angle) + 1) / 2) * 100
+            // ((90 - angle/1.8) + 100)
+          )
+          if (recentAngles.length > 10) {
+            recentAngles.shift();
           }
+          let average = recentAngles.reduce((a, b) => a + b, 0)/recentAngles.length;
+          // drawConnectors(context, results.poseLandmarks, [[11, 13], [13, 15]], { color: perc2color(average), lineWidth: 4 });
+          let percent = ((Math.sin(angle) + 1) / 2) * 100;
+          drawConnectors(context, results.poseLandmarks, [[11, 13], [13, 15]], { color: perc2color(percent), lineWidth: 4 });
+          // if (angle >= 60 && angle <= 120) {
+          //   drawConnectors(context, results.poseLandmarks, [[11, 13], [13, 15]], { color: GREEN, lineWidth: 4 });
+          // } else {
+          //   drawConnectors(context, results.poseLandmarks, [[11, 13], [13, 15]], { color: RED, lineWidth: 4 });
+          // }
           drawLandmarks(context, results.poseLandmarks,
             { color: RED, lineWidth: 2 });
           labelArms(context, results);
@@ -166,11 +191,11 @@ monogatari.action('Canvas').objects({
           drawConnectors(context, results.faceLandmarks, FACEMESH_TESSELATION,
             { color: '#C0C0C070', lineWidth: 1 });
           drawConnectors(context, results.leftHandLandmarks, HAND_CONNECTIONS,
-            { color: '#CC0000', lineWidth: 5 });
+            { color: RED, lineWidth: 5 });
           drawLandmarks(context, results.leftHandLandmarks,
             { color: RED, lineWidth: 2 });
           drawConnectors(context, results.rightHandLandmarks, HAND_CONNECTIONS,
-            { color: '#00CC00', lineWidth: 5 });
+            { color: RED, lineWidth: 5 });
           drawLandmarks(context, results.rightHandLandmarks,
             { color: RED, lineWidth: 2 });
           context.restore();
