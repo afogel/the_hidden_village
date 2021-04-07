@@ -45,5 +45,10 @@ $_ready (() => {
 
 	monogatari.init ('#monogatari').then (() => {
 		// 3. Inside the init function:
+		// This will remove the "Back" button from the quick menu
+		monogatari.component('quick-menu').removeButton('Back');
+
+		// This will disable the left key listener to roll back
+		monogatari.unregisterListener('back');
 	});
 });

@@ -1,125 +1,60 @@
-// const drawConnectors = monogatari.mediapipe.drawConnectors;
-// const drawLandmarks = monogatari.mediapipe.drawLandmarks;
 const RED = "#FF0000";
 const GREEN = "#00FF00";
-let recentAngles = [];
-// drawLandmarks(context, results.poseLandmarks,
-//   { color: '#FF0000', lineWidth: 2 });
-// iterator
-// function g(a) {
-//   var c = 0;
-//   return function () {
-//     return c < a.length ? {
-//       done: !1,
-//       value: a[c++]
-//     } : {
-//         done: !0
-//       }
-//   }
-// }
-// // transform landmarks into an iteractor
-// function h(a) {
-//   var c = "undefined" != typeof Symbol && Symbol.iterator && a[Symbol.iterator];
-//   return c ? c.call(a) : {
-//     next: g(a)
-//   }
-// }
 
-// // function x(a, c) {
-// //   return c && a instanceof Function ? a(c) : a
-// // }
-// const drawLandmarks = function (context, landmarks, drawingSpec) {
-//   if (landmarks) {
-//     drawingSpec = w(drawingSpec);
-//     context.save();
-//     let canvas = context.canvas;
-//     // landmarks = h(landmarks);
-//     landmarks.forEach(landmark => {
-//       if (landmark = landmark.value, void 0 !== landmark && !(void 0 !== landmark.visibility && .1 > landmark.visibility)) {
-//         context.fillStyle = x(drawingSpec.fillColor, landmark);
-//         context.strokeStyle = x(drawingSpec.color, landmark);
-//         context.lineWidth = x(drawingSpec.lineWidth, landmark);
-//         var f = new Path2D;
-//         f.arc(
-//           landmark.x * canvas.width,
-//           landmark.y * canvas.height,
-//           x(drawingSpec.radius, landmark),
-//           0,
-//           2 * Math.PI
-//         );
-//         context.fill(f);
-//         context.stroke(f)
-//       }
-//       context.restore()
-//     });
-//     for (var e = landmarks.next(); !e.done; e = landmarks.next())
+// context, results.poseLandmarks,{ color: RED, lineWidth: 2 }
+function drawLandmarks(context, landmarks, drawingSpec, canvasSpec) {
+  if (landmarks) {
+    // toSpec() adds defaults to drawingspec
+    drawingSpec = toSpec(drawingSpec);
+    context.save();
+    // toEnumerable() turns landmarks into an enumerable
+    landmarks = toIterator(landmarks);
+    for (var landmark = landmarks.next(); !landmark.done; landmark = landmarks.next()) {
+      // make sure the landmark is visible
+      if (landmark = landmark.value, void 0 !== landmark && !(void 0 !== landmark.visibility && .5 > landmark.visibility)) {
+        context.fillStyle = drawingSpec.fillColor
+        context.strokeStyle = drawingSpec.color
+        context.lineWidth = drawingSpec.lineWidth
+        var path = new Path2D;
+        let landmarkX = canvasSpec.startingX + (landmark.x * canvasSpec.width);
+        let landmarkY = canvasSpec.startingY + (landmark.y * canvasSpec.height);
+        if (landmarkX <= canvasSpec.offsetWidth() && landmarkY <= canvasSpec.offsetHeight()) {
+          path.arc(
+            landmarkX,
+            landmarkY,
+            drawingSpec.radius,
+            0,
+            2 * Math.PI
+          );
+          context.fill(path);
+          context.stroke(path);
 
-//   }
-// }
-
-function perc2color(percentage) {
-  var r, g, b = 0;
-  if (percentage < 50) {
-    r = 255;
-    g = Math.round(5.1 * percentage);
-  }
-  else {
-    g = 255;
-    r = Math.round(510 - 5.10 * percentage);
-  }
-  var h = r * 0x10000 + g * 0x100 + b * 0x1;
-  return '#' + ('000000' + h.toString(16)).slice(-6);
-}
-
-
-function getRightArm(results) {
-  return [results.poseLandmarks[11], results.poseLandmarks[13], results.poseLandmarks[15]];
-  return [results.poseLandmarks[11], results.poseLandmarks[13], results.rightHandLandmarks[0]];
-}
-
-function getLeftArm(results) {
-  return [results.poseLandmarks[12], results.poseLandmarks[14], results.poseLandmarks[16]];
-  return [results.poseLandmarks[12], results.poseLandmarks[14], results.leftHandLandmarks[0]];
-}
-
-function removeElements(landmarks, elements) {
-  for (const element of elements) {
-    delete landmarks[element];
+        }
+      }
+      context.restore();
+    }
   }
 }
 
-function removeLandmarks(results) {
-  if (results.poseLandmarks) {
-    removeElements(
-      results.poseLandmarks,
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 18, 19, 20, 21, 22]);
-  }
-}
-
-function getAngle(firstPoint, midPoint, lastPoint) {
-  // let result =
-  radians =  Math.atan2(lastPoint.y - midPoint.y, lastPoint.x - midPoint.x) -
-    Math.atan2(firstPoint.y - midPoint.y, firstPoint.x - midPoint.x);
-  return radians;
-  degrees = radians * (180 / Math.PI);
-    // );
-
-  degrees = Math.abs(degrees); // Angle should never be negative
-  return degrees;
-}
-
-function drawProximityWarning(context) {
-  let canvas = context.canvas;
-  let width = canvas.width;
-  let height = canvas.height;
+function drawProximityWarning(context, canvasSpec) {
+  let width = canvasSpec.width;
+  let height = canvasSpec.height;
   context.font = "3em Calibri";
   context.fillStyle = "White";
   context.textAlign = "center";
-  context.fillText("You're too close!", width / 2, height * .25);
-  context.fillText("Please move back!", width / 2, height * .75);
+  context.fillText(
+    "You're too close!",
+    canvasSpec.startingX + (width / 2),
+    canvasSpec.startingY + (height * .25)
+  );
+  context.fillText(
+    "Please move back!",
+    canvasSpec.startingX + (width / 2),
+    canvasSpec.startingY + (height * .80)
+  );
   context.strokeStyle = 'red';
   context.lineWidth = 15;
-  context.strokeRect(0, 0, width, height);
+  context.strokeRect(canvasSpec.startingX, canvasSpec.startingY, width, height);
 }
 
 function bodyTooClose(results) {
@@ -135,17 +70,36 @@ function bodyTooClose(results) {
   }
 }
 
-function labelArms(context, results) {
-  let canvas = context.canvas;
-  let width = canvas.width;
-  let height = canvas.height;
-  const ARM_LANDMARKS = [11,13,15,12,14,16]
-  let arms = results.poseLandmarks;
-  ARM_LANDMARKS.forEach(element => {
-    context.fillStyle = "White";
-    context.font = "0.5em Calibri";
-    context.fillText(element.toString(), arms[element].x * width, arms[element].y * height);
-  });
+
+function startCountdown(seconds) {
+  let counter = seconds;
+
+  const interval = setInterval(() => {
+    console.log(counter);
+    counter--;
+
+    if (counter < 0) {
+      clearInterval(interval);
+      console.log('Ding!');
+    }
+  }, 1000);
+}
+
+class DrawingArea {
+  constructor(wireframe, widthPct, heightPct, startingXOffsetPct, startingYOffsetPct) {
+    this.width = wireframe.width * widthPct;
+    this.height = wireframe.height * heightPct;
+    this.startingX = wireframe.width * startingXOffsetPct;
+    this.startingY = wireframe.height * startingYOffsetPct;
+  }
+
+  offsetWidth() {
+    return this.width + this.startingX
+  }
+
+  offsetHeight() {
+    return this.height + this.startingY
+  }
 }
 
 monogatari.action('Canvas').objects({
@@ -153,61 +107,132 @@ monogatari.action('Canvas').objects({
     layers: ['wireframe'],
     props: {
       drawWireframe: (wireframe) => {
-        const width = wireframe.width;
-        const height = wireframe.height;
+        const playerCanvas = new DrawingArea(wireframe, 0.55, 0.725, 0.375, 0.125);
+        const poseOneCanvas = new DrawingArea(wireframe, 0.325, 0.325, 0.025, 0.125);
+        const poseTwoCanvas = new DrawingArea(wireframe, 0.325, 0.325, 0.025, 0.5);
+
         let context = wireframe.getContext('2d');
+
+        let captureButton = new Path2D();
+        captureButton.rect(30, 10, 150, 60);
+
+        let savePoseButton = new Path2D();
+        savePoseButton.rect(200, 10, 150, 60);
+
+        let countdownID;
+        let counter = 3;
+        let setPose = false;
+        let latestPoseSet = null;
+        let poseOne = null;
+        let poseTwo = null;
+        let comparisonPose = undefined;
+        document.addEventListener('click', function (event) {
+          let rect = context.canvas.getBoundingClientRect();
+          var x = event.pageX - rect.left,
+            y = event.pageY - rect.top;
+
+          if (context.isPointInPath(captureButton, x, y)) {
+            countdownID = setInterval(() => {
+              counter--;
+
+              if (counter < 0) {
+                clearInterval(countdownID);
+                counter = 3;
+                setPose = true;
+                countdownID = null;
+              }
+            }, 1000);
+          }
+
+        }, false);
 
         return (results) => {
           context.save();
-          context.clearRect(0, 0, width, height);
-          if (bodyTooClose(results)) { drawProximityWarning(context) };
-          removeLandmarks(results);
-          context.drawImage(
-            results.image, 0, 0, this.width, this.height);
-          drawConnectors(context, results.poseLandmarks, POSE_CONNECTIONS,
-            { color: RED, lineWidth: 4 });
-          let arm = getRightArm(results);
-          let angle = getAngle(arm[0], arm[1], arm[2]);
-          recentAngles.push(
-            ((Math.sin(angle) + 1) / 2) * 100
-            // ((90 - angle/1.8) + 100)
-          )
-          if (recentAngles.length > 10) {
-            recentAngles.shift();
-          }
-          let average = recentAngles.reduce((a, b) => a + b, 0)/recentAngles.length;
-          // drawConnectors(context, results.poseLandmarks, [[11, 13], [13, 15]], { color: perc2color(average), lineWidth: 4 });
-          let percent = ((Math.sin(angle) + 1) / 2) * 100;
-          drawConnectors(context, results.poseLandmarks, [[11, 13], [13, 15]], { color: perc2color(percent), lineWidth: 4 });
-          // if (angle >= 60 && angle <= 120) {
-          //   drawConnectors(context, results.poseLandmarks, [[11, 13], [13, 15]], { color: GREEN, lineWidth: 4 });
-          // } else {
-          //   drawConnectors(context, results.poseLandmarks, [[11, 13], [13, 15]], { color: RED, lineWidth: 4 });
-          // }
-          drawLandmarks(context, results.poseLandmarks,
-            { color: RED, lineWidth: 2 });
-          labelArms(context, results);
+          context.clearRect(0, 0, wireframe.width, wireframe.height);
 
-          drawConnectors(context, results.faceLandmarks, FACEMESH_TESSELATION,
-            { color: '#C0C0C070', lineWidth: 1 });
-          drawConnectors(context, results.leftHandLandmarks, HAND_CONNECTIONS,
-            { color: RED, lineWidth: 5 });
-          drawLandmarks(context, results.leftHandLandmarks,
-            { color: RED, lineWidth: 2 });
-          drawConnectors(context, results.rightHandLandmarks, HAND_CONNECTIONS,
-            { color: RED, lineWidth: 5 });
-          drawLandmarks(context, results.rightHandLandmarks,
-            { color: RED, lineWidth: 2 });
+          context.fillStyle = "#123d75";
+          // draw captureButton and savePoseButtons
+          context.fill(captureButton);
+          context.fill(savePoseButton);
+          context.font = "1em Calibri";
+          context.fillStyle = "White";
+          context.textAlign = "center";
+
+          context.fillText("Capture Pose", 105, 45);
+          context.fillText("Save Poses", 275, 45);
+          // create player mirror canvas
+          context.globalAlpha = 0.5;
+          context.fillStyle = "#4a4d52";
+          context.fillRect(
+            playerCanvas.startingX,
+            playerCanvas.startingY,
+            playerCanvas.width,
+            playerCanvas.height
+          );
+          context.fillRect(
+            poseOneCanvas.startingX,
+            poseOneCanvas.startingY,
+            poseOneCanvas.width,
+            poseOneCanvas.height
+          );
+          context.fillRect(
+            poseTwoCanvas.startingX,
+            poseTwoCanvas.startingY,
+            poseTwoCanvas.width,
+            poseTwoCanvas.height
+          );
+          context.globalAlpha = 1;
+          // translate context to center of canvas
+          if (bodyTooClose(results)) { drawProximityWarning(context, playerCanvas) };
+          if (poseOne && poseOne.type === 'PoseOne') {
+            poseOne.drawFullBody(context, { color: RED, lineWidth: 1 }, poseOneCanvas);
+          }
+          if (poseTwo && poseTwo.type === 'PoseTwo') {
+            poseTwo.drawFullBody(context, { color: RED, lineWidth: 1 }, poseTwoCanvas);
+          }
+          if (comparisonPose) {
+            new Pose(results, "active", comparisonPose.comparisonBodySegments).drawFullBody(context, { color: RED, lineWidth: 3 }, playerCanvas);
+          } else {
+            new Pose(results, "active").drawFullBody(context, { color: RED, lineWidth: 3 }, playerCanvas);
+          }
+
+
+          if (countdownID) {
+            context.font = "3em Calibri";
+            context.fillStyle = "White";
+            context.textAlign = "center";
+            context.fillText(
+              `${counter}`,
+              playerCanvas.startingX + (playerCanvas.width / 2),
+              playerCanvas.startingY + (playerCanvas.height / 2)
+            );
+          }
+          if (setPose === true ) {
+            let bothUnassigned = latestPoseSet === null;
+            if (bothUnassigned || (latestPoseSet === "PoseTwo")) {
+              poseOne = new Pose(results, "PoseOne");
+              latestPoseSet = "PoseOne";
+            } else {
+              poseTwo = new Pose(results, "PoseTwo");
+              latestPoseSet = "PoseTwo";
+            }
+            setPose = false;
+          }
           context.restore();
         }
       }
     },
     start: function({wireframe}, props, state, container) {
-      let width = 640;
-      let height = 360;
+
+      let width = window.innerWidth;
+      let height = window.innerHeight;
 
       wireframe.width = width;
       wireframe.height = height;
+      monogatari.holistic.setOptions({
+        selfieMode: true,
+        maxNumHolistic: 2
+      })
       monogatari.holistic.onResults(props.drawWireframe(wireframe));
       const videoElement = document.getElementsByClassName('input_video')[0];
 
@@ -215,8 +240,9 @@ monogatari.action('Canvas').objects({
         onFrame: async () => {
           await monogatari.holistic.send({ image: videoElement });
         },
-        width: 1280,
-        height: 720
+        width: window.innerWidth,
+        height: window.innerHeight,
+        facingMode: 'user'
       });
       camera.start();
 

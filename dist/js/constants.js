@@ -57,6 +57,15 @@ POSE_CONNECTIONS = [
   [0, 1], [1, 2], [2, 3], [3, 7], [0, 4], [4, 5], [5, 6], [6, 8], [9, 10], [11, 12], [11, 13], [13, 15], [15, 17], [15, 19], [15, 21], [17, 19], [12, 14], [14, 16], [16, 18], [16, 20], [16, 22], [18, 20], [11, 23], [12, 24], [23, 24], [23, 25], [24, 26], [25, 27], [26, 28], [27, 29], [28, 30], [29, 31], [30, 32], [27, 31], [28, 32]
 ]
 
+TORSO_CONNECTIONS = [[11, 12], [11, 23], [12, 24], [23, 24]]
+
+RIGHT_LEG_CONNECTIONS = [[23, 25], [25, 27]]
+LEFT_LEG_CONNECTIONS = [[24, 26], [26, 28]]
+RIGHT_ARM_CONNECTIONS = [[11, 13], [13, 15]]
+LEFT_ARM_CONNECTIONS = [[12, 14], [14, 16]]
+
+FULL_BODY_CONNECTIONS = TORSO_CONNECTIONS.concat(RIGHT_LEG_CONNECTIONS, LEFT_LEG_CONNECTIONS)
+
 POSE_LANDMARKS = {
   NOSE: 0,
   LEFT_EYE_INNER: 1,
