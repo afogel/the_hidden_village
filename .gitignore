@@ -33,3 +33,4 @@ release
 
 cypress/videos/
 cypress/screenshots/
+dist/
