@@ -57,7 +57,7 @@
 		"@mediapipe/camera_utils": "^0.1.1606863050",
 		"@mediapipe/control_utils": "^0.1.1606863011",
 		"@mediapipe/drawing_utils": "^0.1.1612318402",
-		"@mediapipe/holistic": "^0.1.1607486640",
+		"@mediapipe/holistic": "^0.1.1617147418",
 		"animate.css": "^4.1.1",
 		"deeply": "^3.1.0",
 		"electron": "^11.1.1",

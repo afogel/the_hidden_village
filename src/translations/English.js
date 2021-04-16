@@ -62,6 +62,8 @@ export default {
 	'OrientationWarning': 'Please rotate your device to play',
 	'Overwrite': 'Overwrite',
 
+	'PoseEditor': 'Pose Editor',
+
 	'QuickButtons': 'Quick Menu Buttons',
 	'QuickMenu': 'Quick Menu',
 	'Quit': 'Quit',

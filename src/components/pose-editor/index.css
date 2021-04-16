@@ -1,0 +1,16 @@
+/**
+ * ===========================
+ * Pose Editor Menu Component
+ * ===========================
+ */
+
+pose-editor {
+
+  table {
+    width: 100%;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+}

@@ -5,6 +5,7 @@ import { FancyError } from './lib/FancyError';
 import merge  from 'deeply';
 import * as package_json from './../package.json';
 import { Random, browserCrypto } from 'random-js';
+// import PoseEditor from './components/pose-editor/pose-editor';
 
 /**
  * Every Monogatari Game is composed mainly of the following items:
@@ -2738,7 +2739,7 @@ class Monogatari {
 	 * Every event listener should be binded in this function.
 	 */
 	static bind (selector) {
-
+		const self = this;
 
 		// Add the orientation checker in case that a specific orientation was
 		// defined.
@@ -2779,10 +2780,7 @@ class Monogatari {
 					this.element ().find ('[data-screen="main"]').get (0).setState ({ open: true });
 				}
 			}
-
 		});
-
-		const self = this;
 
 		// Add listeners for the data-action properties
 		this.on ('click', '[data-action]', function (event) {
@@ -3331,11 +3329,18 @@ Monogatari._configuration = {
 					action: 'start'
 				}
 			},
+			// {
+			// 	string: 'Load',
+			// 	data: {
+			// 		action: 'open-screen',
+			// 		open: 'load'
+			// 	}
+			// },
 			{
-				string: 'Load',
+				string: 'PoseEditor',
 				data: {
 					action: 'open-screen',
-					open: 'load'
+					open: 'pose-editor'
 				}
 			},
 			{

@@ -15,8 +15,9 @@ monogatari.script ({
 		'show scene #f7f6f6 with fadeIn',
 		'show background url("assets/scenes/new_hotness2.png")',
 		'play music MainMusic.mp3 with loop',
-		'show canvas wireframe',
-		'centered',
+		'show pose_trainer aaa',
+		// 'show canvas wireframe',
+		// 'centered',
 	// 	`Stars zoom past your ship as you make your way through space. Navigating
 	// the stars is difficult, but you are an experienced pilot.Suddenly, alarm
 	// bells begin to clang throughout the cabin.Something begins pulling your ship

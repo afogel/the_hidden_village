@@ -19,6 +19,7 @@ class MainMenu extends MenuComponent {
 				button.element = 'button';
 			}
 
+
 			const element = document.createElement (button.element);
 
 			if (typeof button.data === 'object') {

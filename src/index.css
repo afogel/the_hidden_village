@@ -41,6 +41,8 @@
 @import './components/main-screen/index.css';
 @import './components/message-modal/index.css';
 @import './components/quick-menu/index.css';
+@import './components/pose-display/index.css';
+@import './components/pose-editor/index.css';
 @import './components/save-screen/index.css';
 @import './components/save-slot/index.css';
 @import './components/settings-screen/index.css';

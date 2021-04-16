@@ -40,8 +40,18 @@ $_ready (() => {
 		minDetectionConfidence: 0.5,
 		minTrackingConfidence: 0.5
 	});
+	const videoElement = document.getElementsByClassName('input_video')[0];
 	monogatari.holistic = holistic;
-	monogatari.holistic.send();
+	// monogatari.holistic.send();
+	const camera = new monogatari.mediapipe.Camera(videoElement, {
+		onFrame: async () => {
+			await monogatari.holistic.send({ image: videoElement });
+		},
+		width: window.innerWidth,
+		height: window.innerHeight,
+		facingMode: 'user'
+	});
+	camera.start();
 
 	monogatari.init ('#monogatari').then (() => {
 		// 3. Inside the init function:
